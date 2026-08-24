@@ -1,0 +1,45 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <id>dev.gaphunter.phpfileinclusioncompanion</id>
+    <name>PHP File Inclusion Companion</name>
+    <vendor>Gap Hunter Labs</vendor>
+    <description><![CDATA[
+        <p>Warning on <code>include</code>, <code>include_once</code>,
+        <code>require</code>, or <code>require_once</code> whose path
+        argument directly references a PHP superglobal
+        (<code>$_GET</code>, <code>$_POST</code>,
+        <code>$_REQUEST</code>, <code>$_COOKIE</code>). This is the
+        textbook Local/Remote File Inclusion (LFI/RFI) anti-pattern --
+        an attacker can point this at an arbitrary file via directory
+        traversal, or a remote URL if <code>allow_url_include</code>
+        is on.</p>
+        <p>Confirmed real gap: "PHP Inspections (EA Extended)" has a
+        related but distinct inspection -- it only flags a
+        <i>relative</i> include path that depends on the
+        <code>include_path</code> configuration setting, not a path
+        built directly from a superglobal. Confirmed by reading its
+        own documentation before building this.</p>
+        <p><b>100% static text analysis</b> -- a regex-based line
+        scanner, not a real PHP parser, so it works whether the PHP
+        plugin is installed or not.</p>
+        <p>Stated honestly: v0.1 is deliberately narrow -- only flags a
+        superglobal referenced directly in the include/require
+        argument, the least ambiguous and highest-confidence shape. A
+        path built from an intermediate variable that was itself
+        assigned from a superglobal several lines earlier isn't traced
+        (real data-flow analysis, out of scope for a text scanner).</p>
+        <p>Free. No license nags, no telemetry, no network calls.</p>
+    ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <localInspection language=""
+            groupName="PHP File Inclusion Companion"
+            displayName="File inclusion path built from a superglobal"
+            enabledByDefault="true"
+            level="WARNING"
+            implementationClass="dev.gaphunter.phpfileinclusioncompanion.inspection.FileInclusionInspection"/>
+        <notificationGroup id="PHP File Inclusion Companion" displayType="BALLOON"/>
+    </extensions>
+</idea-plugin>
