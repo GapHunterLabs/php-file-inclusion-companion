@@ -1,0 +1,10 @@
+<html>
+<body>
+Reports <code>include</code>, <code>include_once</code>, <code>require</code> or <code>require_once</code> whose path
+uses a superglobal directly (<code>$_GET</code>, <code>$_POST</code>, <code>$_REQUEST</code>, <code>$_COOKIE</code>).
+<!-- tooltip end -->
+<p>This is local or remote file inclusion: an attacker can point the path at an arbitrary file with directory
+traversal, or at a remote URL when <code>allow_url_include</code> is enabled. Map the input to a fixed list of allowed
+files instead.</p>
+</body>
+</html>
